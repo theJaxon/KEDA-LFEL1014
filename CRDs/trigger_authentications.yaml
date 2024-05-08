@@ -1,0 +1,9 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: my-triggerauth
+spec:
+  secretTargetRef:
+    - parameter: apiKey
+      name: my-secret
+      key: api-key
