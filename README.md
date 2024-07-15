@@ -37,7 +37,23 @@ Scaling Cloud Native Applications with KEDA (LFEL1014)
 - A scaler detects if a deployment should be activated or deactivated (ex: Google Cloud Platform Storage, memory, Redis, PostgreSQL)
 
 #### KEDA CRDs
-1. scaledobjects.keda.sh 
+1. scaledobjects.keda.sh: defines how KEDA should scale a specific workload
 2. scaledjobs.keda.sh
 3. triggerauthentications.keda.sh: used to secure communication between KEDA and external event sources (Ensuring only authenticated sources can trigger autoscaling)
-4. clustertriggerauthentications.keda.sh
+4. clustertriggerauthentications.keda.sh: similar to triggerauthentications but applies at a cluster level (when we want to share authentication details across multiple scaledObjects)
+
+---
+
+### Labs
+#### Prerequisites
+```bash
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+
+helm upgrade --install metrics-server metrics-server/metrics-server -n kube-system --set args[0]=--kubelet-insecure-tls
+
+kubectl get pods -n kube-system -l=app.kubernetes.io/name=metrics-server
+
+kubectl port-forward deploy/webapp 8080:80
+
+kubectl autoscale deployment webapp --min=2 --max=5 --cpu-percent=20
+```
